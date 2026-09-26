@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MOHIT — WINTER ARC</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#050505;
+    color:white;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* Background */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(80,120,160,.18), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,.06), transparent 30%);
+    pointer-events:none;
+}
+
+/* Snow */
+.snow{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.snow span{
+    position:absolute;
+    top:-20px;
+    width:3px;
+    height:3px;
+    background:white;
+    border-radius:50%;
+    opacity:.6;
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    to{
+        transform:translateY(110vh);
+    }
+}
+
+/* Main */
+.container{
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+    padding:25px;
+    position:relative;
+    z-index:2;
+}
+
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 0;
+}
+
+.logo{
+    font-size:20px;
+    font-weight:800;
+    letter-spacing:3px;
+}
+
+.status{
+    font-size:12px;
+    color:#aaa;
+    letter-spacing:2px;
+}
+
+/* Hero */
+.hero{
+    min-height:82vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.small{
+    color:#999;
+    letter-spacing:5px;
+    font-size:12px;
+    margin-bottom:20px;
+}
+
+h1{
+    font-size:clamp(60px,13vw,150px);
+    line-height:.85;
+    letter-spacing:-7px;
+    font-weight:900;
+}
+
+h1 span{
+    display:block;
+    color:#aaa;
+}
+
+.subtitle{
+    margin-top:25px;
+    font-size:16px;
+    color:#aaa;
+    letter-spacing:2px;
+}
+
+.start{
+    margin-top:12px;
+    color:#fff;
+}
+
+/* Countdown */
+.countdown{
+    margin-top:50px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    width:100%;
+    max-width:650px;
+}
+
+.box{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    padding:22px 10px;
+    border-radius:15px;
+    backdrop-filter:blur(10px);
+}
+
+.number{
+    font-size:clamp(28px,6vw,50px);
+    font-weight:800;
+}
+
+.label{
+    color:#777;
+    font-size:10px;
+    letter-spacing:2px;
+    margin-top:5px;
+}
+
+/* Button */
+.button{
+    margin-top:35px;
+    padding:14px 30px;
+    border:1px solid #444;
+    border-radius:50px;
+    color:white;
+    text-decoration:none;
+    font-size:12px;
+    letter-spacing:3px;
+    transition:.3s;
+}
+
+.button:hover{
+    background:white;
+    color:black;
+}
+
+/* Bottom */
+.bottom{
+    text-align:center;
+    padding:30px 0;
+    color:#555;
+    font-size:11px;
+    letter-spacing:3px;
+}
+
+@media(max-width:600px){
+    h1{
+        letter-spacing:-4px;
+    }
+
+    .countdown{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .status{
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="snow" id="snow"></div>
+
+<div class="container">
+
+<nav>
+    <div class="logo">MOHIT.</div>
+    <div class="status">WINTER ARC • 2026</div>
+</nav>
+
+<section class="hero">
+
+    <div class="small">THE COUNTDOWN BEGINS</div>
+
+    <h1>
+        WINTER
+        <span>ARC.</span>
+    </h1>
+
+    <div class="subtitle">
+        MOHIT • AGE 17
+    </div>
+
+    <div class="start">
+        STARTING 01 OCTOBER 2026
+    </div>
+
+    <div class="countdown">
+
+        <div class="box">
+            <div class="number" id="days">00</div>
+            <div class="label">DAYS</div>
+        </div>
+
+        <div class="box">
+            <div class="number" id="hours">00</div>
+            <div class="label">HOURS</div>
+        </div>
+
+        <div class="box">
+            <div class="number" id="minutes">00</div>
+            <div class="label">MINUTES</div>
+        </div>
+
+        <div class="box">
+            <div class="number" id="seconds">00</div>
+            <div class="label">SECONDS</div>
+        </div>
+
+    </div>
+
+    <a href="#mission" class="button">DAY 0 →</a>
+
+</section>
+
+<div class="bottom" id="mission">
+    DISCIPLINE • CONSISTENCY • GROWTH
+</div>
+
+</div>
+
+<script>
+
+/* =====================================
+   WINTER ARC START DATE
+   1 OCTOBER 2026
+===================================== */
+
+const targetDate = new Date("October 1, 2026 00:00:00").getTime();
+
+function updateCountdown(){
+
+    const now = new Date().getTime();
+
+    const difference = targetDate - now;
+
+    if(difference <= 0){
+
+        document.getElementById("days").innerText = "00";
+        document.getElementById("hours").innerText = "00";
+        document.getElementById("minutes").innerText = "00";
+        document.getElementById("seconds").innerText = "00";
+
+        document.querySelector(".small").innerText =
+        "WINTER ARC HAS BEGUN";
+
+        document.querySelector(".button").innerText =
+        "DAY 1 →";
+
+        return;
+    }
+
+    const days = Math.floor(
+        difference / (1000 * 60 * 60 * 24)
+    );
+
+    const hours = Math.floor(
+        (difference % (1000 * 60 * 60 * 24))
+        / (1000 * 60 * 60)
+    );
+
+    const minutes = Math.floor(
+        (difference % (1000 * 60 * 60))
+        / (1000 * 60)
+    );
+
+    const seconds = Math.floor(
+        (difference % (1000 * 60))
+        / 1000
+    );
+
+    document.getElementById("days").innerText =
+        String(days).padStart(2,"0");
+
+    document.getElementById("hours").innerText =
+        String(hours).padStart(2,"0");
+
+    document.getElementById("minutes").innerText =
+        String(minutes).padStart(2,"0");
+
+    document.getElementById("seconds").innerText =
+        String(seconds).padStart(2,"0");
+}
+
+updateCountdown();
+
+setInterval(updateCountdown,1000);
+
+
+/* =====================================
+   SNOW EFFECT
+===================================== */
+
+const snow = document.getElementById("snow");
+
+for(let i=0;i<70;i++){
+
+    const flake = document.createElement("span");
+
+    flake.style.left =
+        Math.random()*100 + "%";
+
+    flake.style.animationDuration =
+        (5 + Math.random()*8) + "s";
+
+    flake.style.animationDelay =
+        Math.random()*8 + "s";
+
+    flake.style.opacity =
+        Math.random();
+
+    flake.style.width =
+        (1 + Math.random()*3) + "px";
+
+    flake.style.height =
+        flake.style.width;
+
+    snow.appendChild(flake);
+}
+
+</script>
+
+</body>
+</html>
